@@ -9,7 +9,7 @@ shinyUI(
           fluidRow(
                column(12,
                       # message
-                      h3('Visual demonstration of the AUC and base rates'),
+                      h3('Visual demonstration of the AUC and base rates', align = 'center'),
                       br(), 
                       p('The AUC is independent on base rates meaning that it should remain relatively
                         stable across different, but similar, populations with different base rates
