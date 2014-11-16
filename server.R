@@ -41,11 +41,16 @@ shinyServer(
                sort(sample(seq(10, nrow(unique(round(cbind(tpr(), fpr()),2))) - 10, 7), 3), decreasing = T)
           })
           
+          # data frame of sensitivity and specificity values
+          dfR <- reactive({
+               return(data.frame(tpr = tpr(), fpr = fpr()))     
+          }) 
+          
           #reactive dataset
           # dataset
           D <- reactive({
-               sens = c(unique(round(dfR, 2))[s(),1][1], diff(c(unique(round(dfR, 2))[s(),1], 1)))
-               spec = c(unique(round(dfR, 2))[s(),2][1], diff(c(unique(round(dfR, 2))[s(),2], 1)))          
+               sens = c(unique(round(dfR(), 2))[s(),1][1], diff(c(unique(round(dfR(), 2))[s(),1], 1)))
+               spec = c(unique(round(dfR(), 2))[s(),2][1], diff(c(unique(round(dfR(), 2))[s(),2], 1)))          
 
                return(data.frame(V = round(N*BR()*sens), NV = round(N*(1-BR())*spec)))
           })
@@ -53,11 +58,8 @@ shinyServer(
           # create plot of ROC curve
           output$rocPlot <- renderPlot({
                
-               # data frame of sensitivity and specificity values
-               dfR = data.frame(tpr = tpr(), fpr = fpr())
-               
                # plot ROC curve
-               rocPlot = ggplot(dfR, aes(x = fpr, y = tpr)) + geom_line(size = 2) +
+               rocPlot = ggplot(dfR(), aes(x = fpr, y = tpr)) + geom_line(size = 2) +
                     geom_ribbon(aes(x = fpr, ymax = tpr), ymin = 0, alpha = .5) + 
                     scale_x_continuous(name = 'False Postive Rate (1 - Specificity)') +
                     scale_y_continuous(name = 'True Postive Rate (Sensitvity)') +
@@ -66,8 +68,8 @@ shinyServer(
                              size = 8, colour = 'white') +
                     geom_point(data = data.frame(x = seq(0, 1, .01), y = seq(0, 1, .01)), 
                                aes(x = x, y = y), type = 2, size = 1) +
-                    geom_point(data = dfR[unlist(lapply(unique(round(dfR, 2))[s(),1], 
-                                                        function(x) which(round(dfR, 2)[,1] %in% x)[1])),]
+                    geom_point(data = dfR()[unlist(lapply(unique(round(dfR(), 2))[s(),1], 
+                                                        function(x) which(round(dfR(), 2)[,1] %in% x)[1])),]
                                , aes(x = fpr, y = tpr), size = 5, color = 'red')
                
                print(rocPlot)
