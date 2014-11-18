@@ -5,12 +5,6 @@
 library(ggplot2)
 library(pROC); library(MASS)
 
-
-n11 = 400; n12 = 100; 
-n21 = 300; n22 = 200;
-n31 = 200; n32 = 300;
-n41 = 100; n42 = 400;
-
 shinyServer(
      function(input, output) {    
           
