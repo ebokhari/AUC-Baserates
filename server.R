@@ -12,7 +12,7 @@ shinyServer(
           
           # mean of signal distribution 
           mu2 <- reactive({
-               sqrt(2)*qnorm(input$AUC)
+               2*qnorm(input$AUC)
           })
           
           # BR is base rate, inputted by user
